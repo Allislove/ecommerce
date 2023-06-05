@@ -108,7 +108,7 @@ CREATE NONCLUSTERED INDEX ProdNIDx_Code ON
 products (code);
 
 create table stores (
-storeId int IDENTITY(1,1) PRIMARY KEY,
+storeId int IDENTITY(1,1) primary key,
 name nvarchar(50),
 city nvarchar(50),
 address nvarchar(50),
@@ -119,10 +119,11 @@ create table availability(
 productId int IDENTITY NOT NULL,
 storeId int,
 availability bit,
-constraint fk_storeId FOREIGN KEY (storeId) 
+constraint fk_storeId foreign key (storeId) 
 references stores(storeId),
-constraint fk_productIdAvailability FOREIGN KEY (productId)
-references products(productId)
+constraint fk_productIdAvailability foreign key (productId)
+references products(productId),
+constraint UQ_ProductIn_a_Store UNIQUE NONCLUSTERED (productId, storeId)
 );
 
 create table orders (
@@ -163,6 +164,4 @@ ordersDetail (orderId ASC);
 CREATE NONCLUSTERED INDEX NCidx_OrdDetail_Price ON
 ordersDetail(price ASC);
 
-
--- ¡Adding some index!
 
