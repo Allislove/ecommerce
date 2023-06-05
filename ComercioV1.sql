@@ -116,8 +116,8 @@ addressUrl nvarchar(MAX),
 );
 
 create table availability(
-productId int IDENTITY(1,1) NOT NULL,
-storeId int,
+productId int NOT NULL,
+storeId int NOT NULL,
 availability bit,
 constraint fk_storeId foreign key (storeId) 
 references stores(storeId),
