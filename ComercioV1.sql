@@ -127,7 +127,7 @@ references products(productId)
 
 create table orders (
 orderId int IDENTITY(1,1) NOT NULL,
-tax TINYINT,
+tax tinyint,
 employeeId int,
 customerId int,
 orderDate datetime DEFAULT GETDATE(),
