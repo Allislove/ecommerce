@@ -59,11 +59,11 @@ employees(companyEmail);
 
 create table suppliers(
 supplierId int IDENTITY(1,1) NOT NULL,
-name nvarchar(30) UNIQUE NOT NULL,
+name nvarchar(30) NOT NULL,
 lastName nvarchar(30),
 country nvarchar(30),
 city nvarchar(30),
-companyEmail nvarchar(50),
+companyEmail nvarchar(50) UNIQUE,
 email nvarchar(50) NOT NULL,
 phone1 nvarchar(20) NOT NULL,
 phone2 nvarchar(20),
@@ -168,16 +168,16 @@ ordersDetail(price ASC);
 -- ¡Adding some data to the database!
 
 INSERT INTO customers (name, lastName, age, email, password, phone1, phone2, address, addressUrl)
-VALUES ('Juan', 'Perez', 25, 'Juanperez@test.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
+VALUES ('Juan', 'Perez', 25, 'Tellme@test.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
 
 INSERT INTO customers (name, lastName, age, email, password, phone1, phone2, address, addressUrl)
-VALUES ('Andres', 'Romana', 25, 'iam@andresromana.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
+VALUES ('Andres', 'Romana', 25, 'dev@andresromana.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
 
 INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
-VALUES ('Felipe', 'Serna', 25, 'info@jobsjobs.com', 'info@jobsjobs.com', 'FelipeSerna', '123456', 'CEO', 'CEO', 'Single', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
+VALUES ('Felipe', 'Serna', 25, 'tlljobs@jobsjobs.com', 'inf0o@jobsjobs.com', '0XTQ9801', '123456', 'CEO', 'CEO', 'Single', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
 
 INSERT INTO suppliers (name, lastName, country, city, companyEmail, email, phone1, phone2)
-VALUES ('Juan', 'Perez', 'Colombia', 'Medellin', 'cpem@comail.com', 'cpem@comail.com', '1234567890', '1234567890');
+VALUES ('Juan', 'Perez', 'Colombia', 'Medellin', 'te9@comail.com', 'cpem@comail.com', '1234567890', '1234567890');
 
 INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
 VALUES ('Iphone 11', 1000000, 'Black', 10, 100, 1, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
@@ -214,3 +214,4 @@ VALUES (1, 1, 1, 1000000);
 
 INSERT into ordersDetail (orderId, productId, quantity, price)
 VALUES (1, 2, 1, 1000000);
+
