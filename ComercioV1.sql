@@ -165,3 +165,52 @@ CREATE NONCLUSTERED INDEX NCidx_OrdDetail_Price ON
 ordersDetail(price ASC);
 
 
+-- ¡Adding some data to the database!
+
+INSERT INTO customers (name, lastName, age, email, password, phone1, phone2, address, addressUrl)
+VALUES ('Juan', 'Perez', 25, 'Juanperez@test.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
+
+INSERT INTO customers (name, lastName, age, email, password, phone1, phone2, address, addressUrl)
+VALUES ('Andres', 'Romana', 25, 'iam@andresromana.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
+
+INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
+VALUES ('Felipe', 'Serna', 25, 'info@jobsjobs.com', 'info@jobsjobs.com', 'FelipeSerna', '123456', 'CEO', 'CEO', 'Single', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
+
+INSERT INTO suppliers (name, lastName, country, city, companyEmail, email, phone1, phone2)
+VALUES ('Juan', 'Perez', 'Colombia', 'Medellin', 'cpem@comail.com', 'cpem@comail.com', '1234567890', '1234567890');
+
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
+VALUES ('Iphone 11', 1000000, 'Black', 10, 100, 1, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
+
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
+VALUES ('Iphone 12', 1000000, 'Black', 10, 100, 2, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
+
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
+VALUES ('Iphone 13', 1000000, 'Black', 10, 100, 3, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
+
+INSERT INTO stores (name, city, address, addressUrl)
+VALUES ('Store 1', 'Medellin', 'Calle 1', 'www.store1.com');
+
+INSERT INTO stores (name, city, address, addressUrl)
+VALUES ('Store 2', 'Medellin', 'Calle 2', 'www.store2.com');
+
+INSERT into availability (productId, storeId, availability)
+VALUES (1, 1, 1);
+
+INSERT into availability (productId, storeId, availability)
+VALUES (1, 2, 1);
+
+INSERT into availability (productId, storeId, availability)
+VALUES (2, 1, 1);
+
+INSERT into orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (19, 1, 1, '2021-01-01', NULL);
+
+INSERT into orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (19, 1, 1, '2021-01-01', NULL);
+
+INSERT into ordersDetail (orderId, productId, quantity, price)
+VALUES (1, 1, 1, 1000000);
+
+INSERT into ordersDetail (orderId, productId, quantity, price)
+VALUES (1, 2, 1, 1000000);
