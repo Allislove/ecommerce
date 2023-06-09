@@ -194,8 +194,35 @@ ON shipping(address ASC);
 CREATE INDEX Nc_IDx_ShippingId ON shipping(shippingId);
 CREATE INDEX Nc_IDx_OrdId ON shipping(orderId);
 
--- ¡Adding some data to the database!
+create table payments (
+paymentId int IDENTITY(1,1) NOT NULL,
+orderId int,
+customerId int,
+paymentDate datetime DEFAULT GETDATE(),
+paymentMethod nvarchar(30),
+amount numeric(9,0),
+status nvarchar(50),
+moreInfo NVARCHAR(50),
+constraint PK_PaymentId PRIMARY KEY CLUSTERED (paymentId),
+constraint FK_OrdId_Details FOREIGN KEY
+(orderId) references orders(orderId),
+constraint FK_CustomerId FOREIGN KEY (customerId)
+references customers(customerId)
+);
+-- Indices
+CREATE INDEX CIdx_PaymentId ON
+payments(paymentId);
+CREATE INDEX NCIdx_OrderId ON
+payments(orderId);
+CREATE INDEX NCIdx_CustId ON
+payments(orderId);
+CREATE INDEX NCIDx_PaymentDateId ON
+payments(paymentDate);
+/*ALTER TABLE dbo.payments
+ALTER COLUMN status NVARCHAR(50)*/
 
+-- ¡Adding some data to the database!
+-- customers Data
 INSERT INTO customers (name, lastName, age, email, password, phone1, address)
 VALUES ('Juan', 'Perez', 25, 'iam@andresromana.com', '123456', '1234567890', 'Calle 1 # 1-1');
 INSERT INTO customers (name, lastName, age, email, password, phone1, address)
@@ -205,6 +232,7 @@ VALUES ('Eduardo', 'Romana', 30, 'eduardo@gmail.com', '123456', '1234567890', 'C
 INSERT INTO customers (name, lastName, age, email, password, phone1, address)
 VALUES ('Seb', 'Star', 48, 'seb@hotmail.com', '123456', '1234567890', 'Calle 5# 10-1');
 
+-- employees Data
 INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
 VALUES ('Maria', 'Salaman', 25, 'maria@gmail.com', 'maria@versace.com', 'ZQ0X904', '123456', 'CEO', 1, 'S', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
 INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
@@ -212,6 +240,7 @@ VALUES ('Camila', 'Zapata', 65, 'camZ@gmail.com', 'cam.zapata@wallstreet.com', '
 INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
 VALUES ('María', 'Mena', 29, 'mariamena@gmail.com', 'menarodrigues@wonderstravel.co', 'ZQ0X906', '123456', 'CEO', 1, 'S', '1234567890', 'M', '2019-01-01', NULL, 1, 100, 10);
 
+-- Suppliers data
 INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
 VALUES ('Apple', 'Inc', 'USA', 'California', 'sales@apple.com', 'info@apple.com', '1234567890', '1234567890', '2019-01-01', NULL);
 INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
@@ -221,6 +250,7 @@ VALUES ('Huawei', 'Inc', 'USA', 'California', 'jobs@huawei.com', 'ventas@huawei.
 INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
 VALUES ('LG', 'Inc', 'USA', 'California', 'salg@lg.com', 'ventas@lgsales.com', '1234567890', '1234567890', '2019-01-01', NULL);
 
+-- Products data
 INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
 VALUES ('iPhone X', 130, 'Black', 100, 0.5, 1, 'Hello, I am an iPhone X', 'Please, do not drop me', 'https://www.apple.com/lae/iphone-x/', 'Apple', 'https://www.apple.com/lae/iphone-x/', 'English', 64, '2019-01-01', NULL, 1);
 INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
@@ -253,6 +283,7 @@ INSERT INTO products (name, price, color, units, weight, code, audioMessage, war
 VALUES ('iPhone 14', 699, 'Black', 100, 0.5, 15, 'Hello, I am an iPhone 14', 'Please, do not drop me', 'https://www.apple.com/iphone-12/', 'Apple', 'https://www.apple.com/iphone-12/', 'English', 64, '2019-01-01', NULL, 1);
 --SELECT * FROM PRODUCTS;
 
+-- stores Data
 INSERT INTO stores (name, city, address, addressUrl)
 VALUES ('Apple Store', 'New York', '5th Avenue', 'https://goo.gl/maps/5thAvenue');
 INSERT INTO stores (name, city, address, addressUrl)
@@ -262,6 +293,7 @@ VALUES ('Microsoft Store', 'New York', '7Th Avenue', 'https://goo.gl/maps/5thAve
 INSERT INTO stores (name, city, address, addressUrl)
 VALUES ('Netflix', 'New York', '7Th Avenue', 'https://goo.gl/maps/5thAvenue');
 
+-- Products availability data
 INSERT INTO availability (productId, storeId, availability)
 VALUES (1, 1, 1);
 INSERT INTO availability (productId, storeId, availability)
@@ -274,7 +306,7 @@ INSERT INTO availability (productId, storeId, availability)
 VALUES (5, 1, 1);
 --SELECT * FROM availability;
 
-
+-- orders Data
 INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
 VALUES (0.19, 1, 1, '2019-01-01', NULL);
 INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
@@ -284,6 +316,7 @@ VALUES (0.19, 2, 2, '2019-01-01', NULL);
 INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
 VALUES (0.19, 1, 1, '2019-01-01', NULL);
 
+-- ordersDetail data
 INSERT INTO ordersDetail (orderId, productId, quantity, price)
 VALUES (1, 1, 1, 1000000);
 INSERT INTO ordersDetail (orderId, productId, quantity, price)
@@ -293,6 +326,7 @@ VALUES (1, 3, 1, 1000000);
 INSERT INTO ordersDetail (orderId, productId, quantity, price)
 VALUES (1, 4, 1, 1000000);
 
+-- Shipping data
 INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
 VALUES (1, 'Buenos Aires', 'Buenos Aires', 'Buenos Aires', '2019-01-01', 1, 'Av. Corrientes 1234', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
 INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
@@ -303,6 +337,20 @@ INSERT INTO shipping (orderId, stateName, province, city, shippingDate, delivery
 VALUES (4, 'Envigado', 'Antioquia', 'Envigado', '2019-01-01', 1, 'Av. Sur B', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
 INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
 VALUES (4, 'Caldas', 'Antioquia', 'Caldas', '2019-01-01', 1, 'Av. Sur C', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
+
+-- Payments
+INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
+VALUES (1, 1, '2019-01-01', 'CREDIT_CARD', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
+VALUES (2, 1, '2019-01-01', 'PayPal', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
+VALUES (3, 1, '2019-01-01', 'Seguros', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
+VALUES (4, 1, '2019-01-01', 'Transaccion', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
+VALUES (5, 1, '2019-01-01', 'CREDIT_CARD', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+select * from payments;
+
 
 select * from shipping;
 SELECT * FROM orders;
