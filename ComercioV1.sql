@@ -3,8 +3,10 @@
 use master
 go
 
-create database comercio;
-use comercio;
+create database comercio
+go
+use comercio
+go
 
 create table customers (
 customerId int IDENTITY(1,1) NOT NULL,
@@ -90,7 +92,7 @@ audioMessage nvarchar(50),
 warningMessage nvarchar(50),
 image nvarchar(MAX),
 developer nvarchar(20),
-website nvarchar(40),
+website nvarchar(255),
 languages nvarchar(50),
 minimumGb tinyint,
 createdAt smalldatetime DEFAULT GETDATE(),
@@ -106,6 +108,10 @@ CREATE CLUSTERED INDEX ProdCIDx_name ON
 products (name);
 CREATE NONCLUSTERED INDEX ProdNIDx_Code ON
 products (code);
+
+/*ALTER TABLE products 
+ALTER COLUMN website NVARCHAR(250); */
+
 
 create table stores (
 storeId int IDENTITY(1,1) primary key,
@@ -164,54 +170,140 @@ ordersDetail (orderId ASC);
 CREATE NONCLUSTERED INDEX NCidx_OrdDetail_Price ON
 ordersDetail(price ASC);
 
+create table shipping(
+shippingId int IDENTITY(1,1) NOT NULL,
+orderId INT NOT NULL,
+stateName nvarchar(30),
+province nvarchar(30) NOT NULL,
+city nvarchar(30) NOT NULL,
+shippingDate DATETIME DEFAULT GETDATE() NOT NULL,
+deliveryTime tinyint,
+address nvarchar(100) NOT NULL,
+courier nvarchar(50) NOT NULL,
+courierPhone varchar(20),
+postalCode varchar(10),
+price numeric(8,0) NOT NULL,
+moreInfo NVARCHAR(250),
+constraint PK_ShippingId primary key NONCLUSTERED (shippingId),
+constraint FK_OrderId_Detail FOREIGN KEY (orderId)
+references orders(orderId)
+);
+
+CREATE CLUSTERED INDEX C_IDX_Address_Ship 
+ON shipping(address ASC);
+CREATE INDEX Nc_IDx_ShippingId ON shipping(shippingId);
+CREATE INDEX Nc_IDx_OrdId ON shipping(orderId);
 
 -- ¡Adding some data to the database!
 
-INSERT INTO customers (name, lastName, age, email, password, phone1, phone2, address, addressUrl)
-VALUES ('Juan', 'Perez', 25, 'Tellme@test.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
-
-INSERT INTO customers (name, lastName, age, email, password, phone1, phone2, address, addressUrl)
-VALUES ('Andres', 'Romana', 25, 'dev@andresromana.com', '123456', '1234567890', '1234567890', 'Calle 1', 'www.andresromana.com');
+INSERT INTO customers (name, lastName, age, email, password, phone1, address)
+VALUES ('Juan', 'Perez', 25, 'iam@andresromana.com', '123456', '1234567890', 'Calle 1 # 1-1');
+INSERT INTO customers (name, lastName, age, email, password, phone1, address)
+VALUES ('Andres', 'Romana', 25, 'dev@andresromana.com', '123456', '1234567890', 'Calle 1 # 1-1');
+INSERT INTO customers (name, lastName, age, email, password, phone1, address)
+VALUES ('Eduardo', 'Romana', 30, 'eduardo@gmail.com', '123456', '1234567890', 'Calle 5# 10-1');  
+INSERT INTO customers (name, lastName, age, email, password, phone1, address)
+VALUES ('Seb', 'Star', 48, 'seb@hotmail.com', '123456', '1234567890', 'Calle 5# 10-1');
 
 INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
-VALUES ('Felipe', 'Serna', 25, 'tlljobs@jobsjobs.com', 'inf0o@jobsjobs.com', '0XTQ9801', '123456', 'CEO', 'CEO', 'Single', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
+VALUES ('Maria', 'Salaman', 25, 'maria@gmail.com', 'maria@versace.com', 'ZQ0X904', '123456', 'CEO', 1, 'S', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
+INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
+VALUES ('Camila', 'Zapata', 65, 'camZ@gmail.com', 'cam.zapata@wallstreet.com', 'ZQ0X905', '123456', 'CEO', 1, 'S', '1234567890', 'M', '2019-01-01', NULL, 1, 10, 10);
+INSERT INTO employees (name, lastName, age, email, companyEmail, loginId, password, jobTitle, organizationLevel, maritalStatus, phone, size, hireDate, leftDate, salarieFlag, vacationsHours, sickLeaveHours)
+VALUES ('María', 'Mena', 29, 'mariamena@gmail.com', 'menarodrigues@wonderstravel.co', 'ZQ0X906', '123456', 'CEO', 1, 'S', '1234567890', 'M', '2019-01-01', NULL, 1, 100, 10);
 
-INSERT INTO suppliers (name, lastName, country, city, companyEmail, email, phone1, phone2)
-VALUES ('Juan', 'Perez', 'Colombia', 'Medellin', 'te9@comail.com', 'cpem@comail.com', '1234567890', '1234567890');
+INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
+VALUES ('Apple', 'Inc', 'USA', 'California', 'sales@apple.com', 'info@apple.com', '1234567890', '1234567890', '2019-01-01', NULL);
+INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
+VALUES ('Samsung', 'Inc', 'USA', 'California', 'samsumg@sales.com', 'stesamsumg@sales.com', '1234567890', '1234567890', '2019-01-01', NULL);
+INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
+VALUES ('Huawei', 'Inc', 'USA', 'California', 'jobs@huawei.com', 'ventas@huawei.com', '1234567890', '1234567890', '2019-01-01', NULL);
+INSERT INTO suppliers(name, lastName, country, city, companyEmail, email, phone1, phone2, createdAt, modifiedAt)
+VALUES ('LG', 'Inc', 'USA', 'California', 'salg@lg.com', 'ventas@lgsales.com', '1234567890', '1234567890', '2019-01-01', NULL);
 
-INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
-VALUES ('Iphone 11', 1000000, 'Black', 10, 100, 1, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
-
-INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
-VALUES ('Iphone 12', 1000000, 'Black', 10, 100, 2, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
-
-INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, supplierId)
-VALUES ('Iphone 13', 1000000, 'Black', 10, 100, 3, 'Hello', 'Be careful', 'www.image.com', 'Apple', 'www.apple.com', 'English', 10, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('iPhone X', 130, 'Black', 100, 0.5, 1, 'Hello, I am an iPhone X', 'Please, do not drop me', 'https://www.apple.com/lae/iphone-x/', 'Apple', 'https://www.apple.com/lae/iphone-x/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('iPhone 8', 120, 'Black', 100, 0.5, 2, 'Hello, I am an iPhone 8', 'Please, do not drop me', 'https://www.apple.com/lae/iphone-8/', 'Apple', 'https://www.apple.com/lae/iphone-8/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('iPhone 7', 100, 'Black', 100, 0.5, 3, 'Hello, I am an iPhone 7', 'Please, do not drop me', 'https://www.apple.com/lae/iphone-7/', 'Apple', 'https://www.apple.com/lae/iphone-7/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Xbox Series X', 590, 'Black', 100, 0.5, 4, 'Hello, I am an Xbox Series X', 'Please, do not drop me', 'https://www.xbox.com/en-US/consoles/xbox-series-x', 'Microsoft', 'https://www.xbox.com/en-US/consoles/xbox-series-x', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Xbox Series S', 250, 'Black', 100, 0.5, 5, 'Hello, I am an Xbox Series S', 'Please, do not drop me', 'https://www.xbox.com/en-US/consoles/xbox-series-s', 'Microsoft', 'https://www.xbox.com/en-US/consoles/xbox-series-s', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('PlayStation 5', 599, 'Black', 100, 0.5, 6, 'Hello, I am an PlayStation 5', 'Please, do not drop me', 'https://www.playstation.com/en-us/ps5/', 'Sony', 'https://www.playstation.com/en-us/ps5/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Portail Asus ROG', 1300, 'Black', 100, 0.5, 7, 'Hello, I am an Portail Asus ROG', 'Please, do not drop me', 'https://rog.asus.com/us/', 'Asus', 'https://rog.asus.com/us/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Mac Book Pro', 1500, 'Black', 100, 0.5, 8, 'Hello, I am an Mac Book Pro', 'Please, do not drop me', 'https://www.apple.com/lae/macbook-pro-13/', 'Apple', 'https://www.apple.com/lae/macbook-pro-13/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Mac Book Air', 500, 'Black', 100, 0.5, 9, 'Hello, I am an Mac Book Air', 'Please, do not drop me', 'https://www.apple.com/lae/macbook-air/', 'Apple', 'https://www.apple.com/lae/macbook-air/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Mac Book', 1000, 'Black', 100, 0.5, 10, 'Hello, I am an Mac Book', 'Please, do not drop me', 'https://www.apple.com/lae/macbook-air/', 'Apple', 'https://www.apple.com/lae/macbook-air/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Mac Mini', 469, 'Black', 100, 0.5, 11, 'Hello, I am an Mac Mini', 'Please, do not drop me', 'https://www.apple.com/lae/mac-mini/', 'Apple', 'https://www.apple.com/lae/mac-mini/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Beats Studio 3', 599, 'Black', 100, 0.5, 12, 'Hello, I am an Beats Studio 3', 'Please, do not drop me', 'https://www.beatsbydre.com/headphones/studio3-wireless', 'Beats', 'https://www.beatsbydre.com/headphones/studio3-wireless', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('Beats Solo 3', 440, 'Black', 100, 0.5, 13, 'Hello, I am an Beats Solo 3', 'Please, do not drop me', 'https://www.beatsbydre.com/headphones/solo3-wireless', 'Beats', 'https://www.beatsbydre.com/headphones/solo3-wireless', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('iPhone 14 Pro', 999, 'Black', 100, 0.5, 14, 'Hello, I am an iPhone 14 Pro', 'Please, do not drop me', 'https://www.apple.com/iphone-12-pro/', 'Apple', 'https://www.apple.com/iphone-12-pro/', 'English', 64, '2019-01-01', NULL, 1);
+INSERT INTO products (name, price, color, units, weight, code, audioMessage, warningMessage, image, developer, website, languages, minimumGb, createdAt, modifiedAt, supplierId)
+VALUES ('iPhone 14', 699, 'Black', 100, 0.5, 15, 'Hello, I am an iPhone 14', 'Please, do not drop me', 'https://www.apple.com/iphone-12/', 'Apple', 'https://www.apple.com/iphone-12/', 'English', 64, '2019-01-01', NULL, 1);
+--SELECT * FROM PRODUCTS;
 
 INSERT INTO stores (name, city, address, addressUrl)
-VALUES ('Store 1', 'Medellin', 'Calle 1', 'www.store1.com');
-
+VALUES ('Apple Store', 'New York', '5th Avenue', 'https://goo.gl/maps/5thAvenue');
 INSERT INTO stores (name, city, address, addressUrl)
-VALUES ('Store 2', 'Medellin', 'Calle 2', 'www.store2.com');
+VALUES ('Apple Store', 'New York', '5th Avenue', 'https://goo.gl/maps/5thAvenue');
+INSERT INTO stores (name, city, address, addressUrl)
+VALUES ('Microsoft Store', 'New York', '7Th Avenue', 'https://goo.gl/maps/5thAvenue');
+INSERT INTO stores (name, city, address, addressUrl)
+VALUES ('Netflix', 'New York', '7Th Avenue', 'https://goo.gl/maps/5thAvenue');
 
-INSERT into availability (productId, storeId, availability)
+INSERT INTO availability (productId, storeId, availability)
 VALUES (1, 1, 1);
-
-INSERT into availability (productId, storeId, availability)
-VALUES (1, 2, 1);
-
-INSERT into availability (productId, storeId, availability)
+INSERT INTO availability (productId, storeId, availability)
 VALUES (2, 1, 1);
+INSERT INTO availability (productId, storeId, availability)
+VALUES (3, 1, 1);
+INSERT INTO availability (productId, storeId, availability)
+VALUES (4, 1, 1);
+INSERT INTO availability (productId, storeId, availability)
+VALUES (5, 1, 1);
+--SELECT * FROM availability;
 
-INSERT into orders (tax, employeeId, customerId, orderDate, modifiedDate)
-VALUES (19, 1, 1, '2021-01-01', NULL);
 
-INSERT into orders (tax, employeeId, customerId, orderDate, modifiedDate)
-VALUES (19, 1, 1, '2021-01-01', NULL);
+INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (0.19, 1, 1, '2019-01-01', NULL);
+INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (0.19, 2, 3, '2019-01-01', NULL);
+INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (0.19, 2, 2, '2019-01-01', NULL);
+INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (0.19, 1, 1, '2019-01-01', NULL);
 
-INSERT into ordersDetail (orderId, productId, quantity, price)
+INSERT INTO ordersDetail (orderId, productId, quantity, price)
 VALUES (1, 1, 1, 1000000);
-
-INSERT into ordersDetail (orderId, productId, quantity, price)
+INSERT INTO ordersDetail (orderId, productId, quantity, price)
 VALUES (1, 2, 1, 1000000);
+INSERT INTO ordersDetail (orderId, productId, quantity, price)
+VALUES (1, 3, 1, 1000000);
+INSERT INTO ordersDetail (orderId, productId, quantity, price)
+VALUES (1, 4, 1, 1000000);
 
+INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
+VALUES (1, 'Buenos Aires', 'Buenos Aires', 'Buenos Aires', '2019-01-01', 1, 'Av. Corrientes 1234', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
+INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
+VALUES (2, 'Buenos Aires', 'Buenos Aires', 'Buenos Aires', '2019-01-01', 1, 'Av. Corrientes 1234', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
+INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
+VALUES (3, 'Medellin', 'Antioquia', 'Medellin', '2019-01-01', 1, 'Av. Sur A', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
+INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
+VALUES (4, 'Envigado', 'Antioquia', 'Envigado', '2019-01-01', 1, 'Av. Sur B', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
+INSERT INTO shipping (orderId, stateName, province, city, shippingDate, deliveryTime, address, courier, courierPhone, postalCode, price, moreInfo)
+VALUES (4, 'Caldas', 'Antioquia', 'Caldas', '2019-01-01', 1, 'Av. Sur C', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
+
+select * from shipping;
+SELECT * FROM orders;
+select * from customers;
