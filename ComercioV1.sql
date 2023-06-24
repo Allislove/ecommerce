@@ -199,6 +199,7 @@ paymentId int IDENTITY(1,1) NOT NULL,
 orderId int,
 customerId int,
 paymentDate datetime DEFAULT GETDATE(),
+modifiedDate datetime NULL,
 paymentMethod nvarchar(30),
 amount numeric(9,0),
 status nvarchar(50),
@@ -339,7 +340,7 @@ INSERT INTO shipping (orderId, stateName, province, city, shippingDate, delivery
 VALUES (4, 'Caldas', 'Antioquia', 'Caldas', '2019-01-01', 1, 'Av. Sur C', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
 
 -- Payments
-INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
+INSERT INTO payments (orderId, customerId, paymentDate, amount, status, moreInfo)
 VALUES (1, 1, '2019-01-01', 'CREDIT_CARD', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
 INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
 VALUES (2, 1, '2019-01-01', 'PayPal', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
