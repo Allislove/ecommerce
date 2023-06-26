@@ -28,7 +28,7 @@ CREATE CLUSTERED Index CusCIdx_Email ON
 customers (email);
 CREATE NONCLUSTERED INDEX CusNIdx_FirstPhone ON
 customers (phone1);
-
+select * from customers;
 
 create table employees(
 employeeId int IDENTITY(1,1) NOT NULL,
@@ -122,15 +122,22 @@ addressUrl nvarchar(MAX),
 );
 
 create table availability(
+availabilityId int IDENTITY(1,1) NOT NULL,
 productId int NOT NULL,
 storeId int NOT NULL,
 availability bit,
+constraint PK_availability primary key clustered (availabilityId),
 constraint fk_storeId foreign key (storeId) 
 references stores(storeId),
 constraint fk_productIdAvailability foreign key (productId)
 references products(productId),
 constraint UQ_ProductIn_a_Store UNIQUE NONCLUSTERED (productId, storeId)
 );
+
+/*ALTER TABLE availability ADD availabilityId
+INT IDENTITY(1,1) PRIMARY KEY; */
+-- SELECT * FROM AVAILABILITY;
+
 
 create table orders (
 orderId int IDENTITY(1,1) NOT NULL,
@@ -145,7 +152,6 @@ references employees(employeeId) ON DELETE CASCADE ON UPDATE CASCADE,
 constraint FK_cust_ord_id foreign key(customerId) 
 references customers(customerId) ON UPDATE CASCADE ON DELETE CASCADE
 );
-
 -- Indices
 CREATE NONCLUSTERED INDEX OrdNCIdx_OrdDate ON
 orders (orderDate);
@@ -163,6 +169,8 @@ ON UPDATE CASCADE ON DELETE CASCADE,
 constraint FK_WhatProductIs_Id foreign key (productId) references products(productId),
 constraint UQ_ProductIn_a_OrdDetail UNIQUE NONCLUSTERED (orderId, productId)
 );
+
+--SELECT * FROM ordersDetail;
 
 -- INDEX 
 CREATE CLUSTERED INDEX CIDx_OrdDetail_OrdID ON
@@ -316,6 +324,10 @@ INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
 VALUES (0.19, 2, 2, '2019-01-01', NULL);
 INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
 VALUES (0.19, 1, 1, '2019-01-01', NULL);
+INSERT INTO orders (tax, employeeId, customerId, orderDate, modifiedDate)
+VALUES (20, 1, 1, '2023-06-14', NULL);
+--SELECT * FROM orders;
+
 
 -- ordersDetail data
 INSERT INTO ordersDetail (orderId, productId, quantity, price)
@@ -340,19 +352,21 @@ INSERT INTO shipping (orderId, stateName, province, city, shippingDate, delivery
 VALUES (4, 'Caldas', 'Antioquia', 'Caldas', '2019-01-01', 1, 'Av. Sur C', 'Andreani', '0800-1234-5678', '1234', 100, 'Entregar de 9 a 18hs');
 
 -- Payments
-INSERT INTO payments (orderId, customerId, paymentDate, amount, status, moreInfo)
-VALUES (1, 1, '2019-01-01', 'CREDIT_CARD', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
-INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
-VALUES (2, 1, '2019-01-01', 'PayPal', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
-INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
-VALUES (3, 1, '2019-01-01', 'Seguros', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
-INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
-VALUES (4, 1, '2019-01-01', 'Transaccion', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
-INSERT INTO payments (orderId, customerId, paymentDate, paymentMethod, amount, status, moreInfo)
-VALUES (5, 1, '2019-01-01', 'CREDIT_CARD', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, modifiedDate, amount, status, moreInfo)
+VALUES (1, 1, '2019-01-01', NULL, 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+
+INSERT INTO payments (orderId, customerId, paymentDate, modifiedDate, paymentMethod, amount, status, moreInfo)
+VALUES (2, 1, '2019-01-01', NULL, 'PayPal', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, modifiedDate, paymentMethod, amount, status, moreInfo)
+VALUES (3, 1, '2019-01-01', NULL, 'Seguros', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, modifiedDate, paymentMethod, amount, status, moreInfo)
+VALUES (4, 1, '2019-01-01', NULL, 'Transaccion', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
+INSERT INTO payments (orderId, customerId, paymentDate, modifiedDate, paymentMethod, amount, status, moreInfo)
+VALUES (5, 1, '2019-01-01', NULL, 'CREDIT_CARD', 100.00, 'PAID', 'XXXX-XXXX-XXXX-1111');
 select * from payments;
 
 
 select * from shipping;
 SELECT * FROM orders;
 select * from customers;
+select * from products;
