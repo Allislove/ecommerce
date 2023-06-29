@@ -14,7 +14,7 @@ name nvarchar(50) NOT NULL,
 lastName nvarchar(50),
 age tinyint NOT NULL,
 email nvarchar(50) UNIQUE NOT NULL,
-password nvarchar(50) NOT NULL,
+password nvarchar(max) NOT NULL,
 phone1 nvarchar(20) NOT NULL,
 phone2 nvarchar(20) NULL,
 address nvarchar(100) NOT NULL,
@@ -28,7 +28,9 @@ CREATE CLUSTERED Index CusCIdx_Email ON
 customers (email);
 CREATE NONCLUSTERED INDEX CusNIdx_FirstPhone ON
 customers (phone1);
-select * from customers;
+--select * from customers;
+/*ALTER TABLE customers 
+ALTER COLUMN password NVARCHAR(max); */
 
 create table employees(
 employeeId int IDENTITY(1,1) NOT NULL,
@@ -38,7 +40,7 @@ age tinyint NOT NULL,
 email nvarchar(50) NULL,
 companyEmail nvarchar(50) UNIQUE,
 loginId char(10) UNIQUE NOT NULL,
-password nvarchar(50),
+password nvarchar(max),
 jobTitle nvarchar(50),
 organizationLevel nvarchar(50),
 maritalStatus nvarchar(20),
@@ -112,7 +114,6 @@ products (code);
 /*ALTER TABLE products 
 ALTER COLUMN website NVARCHAR(250); */
 
-
 create table stores (
 storeId int IDENTITY(1,1) primary key,
 name nvarchar(50),
@@ -137,8 +138,7 @@ constraint UQ_ProductIn_a_Store UNIQUE NONCLUSTERED (productId, storeId)
 /*ALTER TABLE availability ADD availabilityId
 INT IDENTITY(1,1) PRIMARY KEY; */
 -- SELECT * FROM AVAILABILITY;
-
-
+select * from products where supplierId = 1
 create table orders (
 orderId int IDENTITY(1,1) NOT NULL,
 tax tinyint,
